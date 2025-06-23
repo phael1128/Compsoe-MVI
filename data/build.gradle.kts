@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
@@ -10,11 +10,8 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.data"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -56,4 +52,6 @@ dependencies {
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+    //okHttp
+    implementation(libs.okhttp)
 }
