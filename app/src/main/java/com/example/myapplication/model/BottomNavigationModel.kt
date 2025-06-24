@@ -2,7 +2,6 @@ package com.example.myapplication.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.myapplication.R
 import com.example.myapplication.common.SearchingRoute
 
