@@ -2,4 +2,5 @@
     <string name="app_name">My Application</string>
     <string name="searching">찾아보기</string>
     <string name="saved_searching">불러오기</string>
+    <string name="searching_data">검색</string>
 </resources>
