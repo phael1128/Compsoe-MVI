@@ -18,9 +18,7 @@ data class ResDocument(
     @SerializedName("thumbnail") val thumbnail: String?, //v
     @SerializedName("title") val title: String?,
     @SerializedName("url") val url: String?,
-
-
+    
     //공통
     @SerializedName("datetime") var datetime: String, // 문서 작성시간
-    var viewType: Int
 )
