@@ -35,4 +35,6 @@ android {
 
 dependencies {
     implementation(project(":data"))
+
+    implementation(libs.javax)
 }
