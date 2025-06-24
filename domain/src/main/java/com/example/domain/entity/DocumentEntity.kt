@@ -7,12 +7,12 @@ data class DocumentEntity(
     val width: Long?,
     val height: Long?,
     val displaySiteName: String?,
-    val doc_url: String?,
+    val docUrl: String?,
     val author: String?,
     val playTime: Int?,
     val thumbnail: String?,
     val title: String?,
     val url: String?,
     val datetime: String,
-    var viewType: Int
+    var searchingViewType: SearchingViewType? = null
 )
