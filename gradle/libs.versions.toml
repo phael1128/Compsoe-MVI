@@ -17,7 +17,7 @@ kspVersion = "2.1.21-RC-2.0.0"
 gsonVersion = "2.13.1"
 retrofitVersion = "2.11.0"
 okhttp_version = "4.12.0"
-coil = "2.4.0"
+coilVersion = "2.4.0"
 javaxVersion="1"
 
 [libraries]
@@ -40,11 +40,14 @@ compose-navigation = { group = "androidx.navigation", name = "navigation-compose
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion" }
+hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltCompose" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gsonVersion" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitVersion" }
 okhttp = { group = "com.squareup.okhttp3", name="logging-interceptor", version.ref = "okhttp_version" }
 javax = { group = "javax.inject", name="javax.inject", version.ref = "javaxVersion" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
