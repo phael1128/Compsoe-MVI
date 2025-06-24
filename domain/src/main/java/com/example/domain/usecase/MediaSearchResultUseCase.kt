@@ -1,18 +1,11 @@
 package com.example.domain.usecase
 
-import com.example.domain.entity.ImageEntity
-import com.example.domain.entity.VideoEntity
+import com.example.domain.entity.DocumentEntity
 
 interface MediaSearchResultUseCase {
-    suspend fun getImageResult(
+    suspend operator fun invoke(
         query: String,
         page: Int,
         size: Int
-    ): ImageEntity
-
-    suspend fun getVideoResult(
-        query: String,
-        page: Int,
-        size: Int
-    ): VideoEntity
+    ): ArrayList<DocumentEntity>
 }
