@@ -7,7 +7,6 @@ import com.example.domain.entity.DocumentEntity
 import com.example.domain.usecase.MediaSearchResultUseCase
 import com.example.myapplication.common.Intent
 import com.example.myapplication.model.SearchingIntent
-import com.example.myapplication.model.SearchingUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +18,10 @@ class SearchingViewModel @Inject constructor(
 
     val userSearchingData: MutableState<String> = mutableStateOf("")
 
-    val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf<List<DocumentEntity>>(emptyList())
+    val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
+
+    private var page = 0
+    
 
     override fun handleIntent(intent: Intent) {
         when(intent) {
@@ -31,11 +33,15 @@ class SearchingViewModel @Inject constructor(
 
     private fun getSearchingResult() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            searchingUiState.value = mediaSearchResultUseCase(
+            searchingUiState.value += mediaSearchResultUseCase(
                 query = userSearchingData.value,
-                page = 1,
-                size = 30
+                page = ++page,
+                size = PAGE_SIZE
             )
         }
+    }
+
+    companion object {
+        const val PAGE_SIZE = 30
     }
 }

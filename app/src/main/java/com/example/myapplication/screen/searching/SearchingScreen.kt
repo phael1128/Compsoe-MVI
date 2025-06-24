@@ -6,23 +6,40 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.R
 import com.example.myapplication.model.SearchingIntent
+import com.example.myapplication.util.isFinishedScroll
 import com.example.myapplication.viewmodels.SearchingViewModel
 
 @Composable
 fun SearchingScreen() {
     val viewModel = hiltViewModel<SearchingViewModel>()
+    val columnListScrollState = rememberLazyListState()
+
+    LaunchedEffect(columnListScrollState) {
+        snapshotFlow {
+            columnListScrollState.isFinishedScroll()
+        }.collect { isFinish ->
+            if (isFinish) {
+                viewModel.setIntent(SearchingIntent.Searching)
+            }
+        }
+    }
+
     Column {
         LazyColumn(
+            state = columnListScrollState,
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 4.dp)
