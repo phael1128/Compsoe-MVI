@@ -36,5 +36,10 @@ android {
 dependencies {
     implementation(project(":data"))
 
+    // javax
     implementation(libs.javax)
+
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
