@@ -8,4 +8,6 @@ interface MediaSearchResultUseCase {
         page: Int,
         size: Int
     ): ArrayList<DocumentEntity>
+
+    fun getLastKeyword(): String
 }
