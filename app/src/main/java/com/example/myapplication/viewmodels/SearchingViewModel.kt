@@ -16,12 +16,12 @@ class SearchingViewModel @Inject constructor(
     private val mediaSearchResultUseCase: MediaSearchResultUseCase
 ): BaseViewModel() {
 
+    // 유저가 검색한 키워드
     val userSearchingData: MutableState<String> = mutableStateOf("")
-
+    // 유저가 검색한 결과
     val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
 
     private var page = 0
-    
 
     override fun handleIntent(intent: Intent) {
         when(intent) {
@@ -33,12 +33,20 @@ class SearchingViewModel @Inject constructor(
 
     private fun getSearchingResult() {
         viewModelScope.launch(coroutineExceptionHandler) {
+            if (mediaSearchResultUseCase.getLastKeyword() != userSearchingData.value) {
+                initializeSearchingUiState()
+            }
             searchingUiState.value += mediaSearchResultUseCase(
                 query = userSearchingData.value,
                 page = ++page,
                 size = PAGE_SIZE
             )
         }
+    }
+
+    private fun initializeSearchingUiState() {
+        searchingUiState.value = emptyList()
+        page = 0
     }
 
     companion object {
