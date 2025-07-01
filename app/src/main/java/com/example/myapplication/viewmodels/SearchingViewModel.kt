@@ -21,7 +21,7 @@ class SearchingViewModel @Inject constructor(
     // 유저가 검색한 결과
     val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
 
-    private var page = 0
+    private var page = 1
 
     override fun handleIntent(intent: Intent) {
         when(intent) {
@@ -36,9 +36,10 @@ class SearchingViewModel @Inject constructor(
             if (mediaSearchResultUseCase.getLastKeyword() != userSearchingData.value) {
                 initializeSearchingUiState()
             }
+
             searchingUiState.value += mediaSearchResultUseCase(
                 query = userSearchingData.value,
-                page = ++page,
+                page = page++, // 응답 성공/실패 여부를 판단하여, 성골했을 경우에만 page count 를 늘리는 쪽으로 가보는 건 어떨까
                 size = PAGE_SIZE
             )
         }
@@ -46,7 +47,7 @@ class SearchingViewModel @Inject constructor(
 
     private fun initializeSearchingUiState() {
         searchingUiState.value = emptyList()
-        page = 0
+        page = 1
     }
 
     companion object {
