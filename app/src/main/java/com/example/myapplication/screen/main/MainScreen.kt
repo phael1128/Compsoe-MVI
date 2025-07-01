@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.common.SearchingRoute
 import com.example.myapplication.screen.saved.SavedSearchingScreen
+import com.example.myapplication.screen.searching.SearchingDetailScreen
 import com.example.myapplication.screen.searching.SearchingScreen
 
 @Composable
@@ -24,10 +25,13 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(SearchingRoute.SEARCHING_SCREEN.routeName) {
-                SearchingScreen()
+                SearchingScreen(navController)
             }
             composable(SearchingRoute.SAVED_SEARCHING_SCREEN.routeName) {
                 SavedSearchingScreen()
+            }
+            composable(SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName) {
+                SearchingDetailScreen()
             }
         }
     }
