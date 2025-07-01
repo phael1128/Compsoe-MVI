@@ -1,5 +1,6 @@
 package com.example.myapplication.screen.searching
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.domain.entity.SearchingViewType
 import com.example.myapplication.R
 import com.example.myapplication.common.SearchingRoute
 import com.example.myapplication.model.SearchingIntent
@@ -59,7 +61,14 @@ fun SearchingScreen(
                 SearchingItem(
                     documentEntity = viewModel.searchingUiState.value[index],
                     onClick = { documentEntity ->
-                        navController.navigate(SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName)
+                        val uri = if (documentEntity.searchingViewType == SearchingViewType.Image) {
+                            documentEntity.docUrl
+                        } else {
+                            documentEntity.url
+                        }.let { selectedUrlString ->
+                            Uri.encode(selectedUrlString)
+                        }
+                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/${uri}")
                     }
                 )
             }
