@@ -25,14 +25,18 @@ import com.example.myapplication.R
 
 @Composable
 fun SearchingItem(
-    documentEntity: DocumentEntity
+    documentEntity: DocumentEntity,
+    onClick: (DocumentEntity) -> Unit = {}
 ) {
     val viewType = documentEntity.searchingViewType
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
+        onClick = {
+            onClick.invoke(documentEntity)
+        }
     ) {
         Row {
             Box(

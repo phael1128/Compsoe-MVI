@@ -24,13 +24,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.myapplication.R
+import com.example.myapplication.common.SearchingRoute
 import com.example.myapplication.model.SearchingIntent
 import com.example.myapplication.util.isFinishedScroll
 import com.example.myapplication.viewmodels.SearchingViewModel
 
 @Composable
-fun SearchingScreen() {
+fun SearchingScreen(
+    navController: NavController
+) {
     val viewModel = hiltViewModel<SearchingViewModel>()
     val columnListScrollState = rememberLazyListState()
 
@@ -52,7 +56,12 @@ fun SearchingScreen() {
                 .padding(horizontal = 4.dp)
         ) {
             items(viewModel.searchingUiState.value.size) { index ->
-                SearchingItem(viewModel.searchingUiState.value[index])
+                SearchingItem(
+                    documentEntity = viewModel.searchingUiState.value[index],
+                    onClick = { documentEntity ->
+                        navController.navigate(SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName)
+                    }
+                )
             }
         }
         UserSearchingTextField()
