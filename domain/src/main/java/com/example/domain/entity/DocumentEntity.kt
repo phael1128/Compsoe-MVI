@@ -14,5 +14,5 @@ data class DocumentEntity(
     val title: String?,
     val url: String?,
     val datetime: String,
-    var searchingViewType: SearchingViewType? = null
+    var searchingViewType: SearchingViewType? = null,
 )

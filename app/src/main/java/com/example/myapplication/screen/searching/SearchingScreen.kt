@@ -35,9 +35,9 @@ import com.example.myapplication.viewmodels.SearchingViewModel
 
 @Composable
 fun SearchingScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SearchingViewModel = hiltViewModel(),
 ) {
-    val viewModel = hiltViewModel<SearchingViewModel>()
     val columnListScrollState = rememberLazyListState()
 
     LaunchedEffect(columnListScrollState) {
@@ -53,23 +53,25 @@ fun SearchingScreen(
     Column {
         LazyColumn(
             state = columnListScrollState,
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 4.dp)
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp),
         ) {
             items(viewModel.searchingUiState.value.size) { index ->
                 SearchingItem(
                     documentEntity = viewModel.searchingUiState.value[index],
                     onClick = { documentEntity ->
-                        val uri = if (documentEntity.searchingViewType == SearchingViewType.Image) {
-                            documentEntity.docUrl
-                        } else {
-                            documentEntity.url
-                        }.let { selectedUrlString ->
-                            Uri.encode(selectedUrlString)
-                        }
-                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/${uri}")
-                    }
+                        val uri =
+                            if (documentEntity.searchingViewType == SearchingViewType.Image) {
+                                documentEntity.docUrl
+                            } else {
+                                documentEntity.url
+                            }.let { selectedUrlString ->
+                                Uri.encode(selectedUrlString)
+                            }
+                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
+                    },
                 )
             }
         }
@@ -78,41 +80,42 @@ fun SearchingScreen(
 }
 
 @Composable
-fun UserSearchingTextField() {
-    val viewModel = hiltViewModel<SearchingViewModel>()
-
+fun UserSearchingTextField(viewModel: SearchingViewModel = hiltViewModel()) {
     Row(
-        modifier = Modifier
-            .padding(4.dp)
+        modifier =
+            Modifier
+                .padding(4.dp),
     ) {
         TextField(
             value = viewModel.userSearchingData.value,
             onValueChange = {
                 viewModel.userSearchingData.value = it
             },
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .background(
-                    color = Color.White
-                ),
-            textStyle = TextStyle(fontSize = 16.sp)
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(
+                        color = Color.White,
+                    ),
+            textStyle = TextStyle(fontSize = 16.sp),
         )
         Spacer(
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(4.dp),
         )
         Button(
-            modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.CenterVertically),
+            modifier =
+                Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterVertically),
             onClick = {
                 viewModel.setIntent(SearchingIntent.Searching)
-            }
+            },
         ) {
             Text(
                 text = stringResource(R.string.searching_data),
-                style = TextStyle(fontSize = 16.sp)
+                style = TextStyle(fontSize = 16.sp),
             )
         }
     }
