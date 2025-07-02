@@ -23,34 +23,50 @@ class SearchingViewModel @Inject constructor(
 
     private var page = 1
 
-    override fun handleIntent(intent: Intent) {
-        when(intent) {
-            is SearchingIntent.Searching -> {
-                getSearchingResult()
+        override fun handleIntent(intent: Intent) {
+            when (intent) {
+                is SearchingIntent.Searching -> {
+                    getSearchingResult()
+                }
+                is SearchingIntent.SearchingMoreData -> {
+                    searchData()
+                }
             }
         }
-    }
 
-    private fun getSearchingResult() {
-        viewModelScope.launch(coroutineExceptionHandler) {
-            if (mediaSearchResultUseCase.getLastKeyword() != userSearchingData.value) {
+        private fun getSearchingResult() {
+            viewModelScope.launch(coroutineExceptionHandler) {
+                if (mediaSearchResultUseCase.getLastKeyword() == userSearchingData.value) {
+                    return@launch
+                }
+
                 initializeSearchingUiState()
+                mediaSearchResultUseCase.setKeyWord(userSearchingData.value)
+                searchMoreData()
             }
+        }
 
-            searchingUiState.value += mediaSearchResultUseCase(
-                query = userSearchingData.value,
-                page = page++, // 응답 성공/실패 여부를 판단하여, 성골했을 경우에만 page count 를 늘리는 쪽으로 가보는 건 어떨까
-                size = PAGE_SIZE
-            )
+        private fun searchData() {
+            viewModelScope.launch(coroutineExceptionHandler) {
+                searchMoreData()
+            }
+        }
+
+        private suspend fun searchMoreData() {
+            searchingUiState.value +=
+                mediaSearchResultUseCase(
+                    query = userSearchingData.value,
+                    page = page++, // 응답 성공/실패 여부를 판단하여, 성골했을 경우에만 page count 를 늘리는 쪽으로 가보는 건 어떨까
+                    size = PAGE_SIZE,
+                )
+        }
+
+        private fun initializeSearchingUiState() {
+            searchingUiState.value = emptyList()
+            page = 1
+        }
+
+        companion object {
+            const val PAGE_SIZE = 30
         }
     }
-
-    private fun initializeSearchingUiState() {
-        searchingUiState.value = emptyList()
-        page = 1
-    }
-
-    companion object {
-        const val PAGE_SIZE = 30
-    }
-}

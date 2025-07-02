@@ -45,7 +45,7 @@ fun SearchingScreen(
             columnListScrollState.isFinishedScroll()
         }.collect { isFinish ->
             if (isFinish) {
-                viewModel.setIntent(SearchingIntent.Searching)
+                viewModel.setIntent(SearchingIntent.SearchingMoreData)
             }
         }
     }
