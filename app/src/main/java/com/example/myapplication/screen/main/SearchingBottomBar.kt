@@ -14,9 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.myapplication.model.bottomNavigationItems
 
 @Composable
-fun SearchingBottomBar(
-    navController: NavController
-) {
+fun SearchingBottomBar(navController: NavController) {
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -35,16 +33,15 @@ fun SearchingBottomBar(
                 icon = {
                     Icon(
                         painter = painterResource(item.icon),
-                        contentDescription = stringResource(item.label)
+                        contentDescription = stringResource(item.label),
                     )
                 },
                 label = {
                     Text(
-                        text = stringResource(item.label)
+                        text = stringResource(item.label),
                     )
-                }
+                },
             )
         }
-
     }
 }

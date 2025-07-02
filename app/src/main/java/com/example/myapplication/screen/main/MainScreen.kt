@@ -1,7 +1,5 @@
 package com.example.myapplication.screen.main
 
-import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -30,14 +28,13 @@ fun MainScreen() {
             if (!shouldShowBottomBar) {
                 SearchingBottomBar(navController)
             }
-        }
+        },
     ) { innerPadding ->
-
 
         NavHost(
             navController = navController,
             startDestination = SearchingRoute.SEARCHING_SCREEN.routeName,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) {
             composable(SearchingRoute.SEARCHING_SCREEN.routeName) {
                 SearchingScreen(navController)
@@ -47,7 +44,7 @@ fun MainScreen() {
             }
             composable(
                 "${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/{uri}",
-                arguments = listOf(navArgument("uri") { type = NavType.StringType })
+                arguments = listOf(navArgument("uri") { type = NavType.StringType }),
             ) { backStackEntry ->
                 val uri = backStackEntry.arguments?.getString("uri") ?: return@composable
 

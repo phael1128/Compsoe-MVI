@@ -12,16 +12,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchingViewModel @Inject constructor(
-    private val mediaSearchResultUseCase: MediaSearchResultUseCase
-): BaseViewModel() {
+class SearchingViewModel
+    @Inject
+    constructor(
+        private val mediaSearchResultUseCase: MediaSearchResultUseCase,
+    ) : BaseViewModel() {
+        // 유저가 검색한 키워드
+        val userSearchingData: MutableState<String> = mutableStateOf("")
 
-    // 유저가 검색한 키워드
-    val userSearchingData: MutableState<String> = mutableStateOf("")
-    // 유저가 검색한 결과
-    val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
+        // 유저가 검색한 결과
+        val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
 
-    private var page = 1
+        private var page = 1
 
         override fun handleIntent(intent: Intent) {
             when (intent) {
