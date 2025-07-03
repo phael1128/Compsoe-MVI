@@ -2,9 +2,11 @@ package com.example.myapplication.screen.searching
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -50,32 +53,35 @@ fun SearchingScreen(
         }
     }
 
-    Column {
-        LazyColumn(
-            state = columnListScrollState,
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp),
-        ) {
-            items(viewModel.searchingUiState.value.size) { index ->
-                SearchingItem(
-                    documentEntity = viewModel.searchingUiState.value[index],
-                    onClick = { documentEntity ->
-                        val uri =
-                            if (documentEntity.searchingViewType == SearchingViewType.Image) {
-                                documentEntity.docUrl
-                            } else {
-                                documentEntity.url
-                            }.let { selectedUrlString ->
-                                Uri.encode(selectedUrlString)
-                            }
-                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
-                    },
-                )
+    Box {
+        LoadingProgress(viewModel.isLoadingState.value)
+        Column {
+            LazyColumn(
+                state = columnListScrollState,
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp),
+            ) {
+                items(viewModel.searchingUiState.value.size) { index ->
+                    SearchingItem(
+                        documentEntity = viewModel.searchingUiState.value[index],
+                        onClick = { documentEntity ->
+                            val uri =
+                                if (documentEntity.searchingViewType == SearchingViewType.Image) {
+                                    documentEntity.docUrl
+                                } else {
+                                    documentEntity.url
+                                }.let { selectedUrlString ->
+                                    Uri.encode(selectedUrlString)
+                                }
+                            navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
+                        },
+                    )
+                }
             }
+            UserSearchingTextField()
         }
-        UserSearchingTextField()
     }
 }
 
@@ -116,6 +122,23 @@ fun UserSearchingTextField(viewModel: SearchingViewModel = hiltViewModel()) {
             Text(
                 text = stringResource(R.string.searching_data),
                 style = TextStyle(fontSize = 16.sp),
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingProgress(isLoading: Boolean) {
+    if (isLoading) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            CircularProgressIndicator(
+                modifier =
+                    Modifier.padding(8.dp),
+                color = Color.Black,
+                strokeWidth = 4.dp,
             )
         }
     }
