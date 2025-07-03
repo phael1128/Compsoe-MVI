@@ -27,7 +27,7 @@ class MediaSearchResultUseCaseImpl
             withContext(Dispatchers.IO) {
                 if (isNewKeyword(query)) {
                     setKeyWord(query)
-                    initializePageCount()
+                    initializeQueryData()
                 }
 
                 val documentEntityList = ArrayList<DocumentEntity>()
@@ -96,9 +96,11 @@ class MediaSearchResultUseCaseImpl
             }
         }
 
-        private fun initializePageCount() {
+        private fun initializeQueryData() {
             imagePageCount = 0
+            isLastImageResult = false
             videoPageCount = 0
+            isLastVideoResult = false
         }
 
         private fun isNewKeyword(query: String) = query != lastKeyword

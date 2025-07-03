@@ -41,6 +41,7 @@ class SearchingViewModel
                 }
 
                 initializeSearchingUiState()
+                isLoadingState.value = true
                 searchMoreData()
             }
         }
@@ -56,6 +57,7 @@ class SearchingViewModel
                 mediaSearchResultUseCase(
                     query = userSearchingData.value,
                 )
+            isLoadingState.value = false
         }
 
         private fun initializeSearchingUiState() {
