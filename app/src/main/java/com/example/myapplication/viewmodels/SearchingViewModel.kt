@@ -23,6 +23,8 @@ class SearchingViewModel
         // 유저가 검색한 결과
         val searchingUiState: MutableState<List<DocumentEntity>> = mutableStateOf(emptyList())
 
+        val isLoadingState: MutableState<Boolean> = mutableStateOf(false)
+
         override fun handleIntent(intent: Intent) {
             when (intent) {
                 is SearchingIntent.Searching -> {
