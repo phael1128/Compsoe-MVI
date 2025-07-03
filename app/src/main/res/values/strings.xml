@@ -3,4 +3,7 @@
     <string name="searching">찾아보기</string>
     <string name="saved_searching">불러오기</string>
     <string name="searching_data">검색</string>
+    <string name="view_type">viewType : </string>
+    <string name="created_time">작성일자 : </string>
+    <string name="create_time_string">yyyy년 MM월 dd일 hh:mm</string>
 </resources>
