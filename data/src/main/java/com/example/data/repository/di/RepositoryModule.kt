@@ -2,6 +2,7 @@ package com.example.data.repository.di
 
 import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
 import com.example.data.repository.MediaSearchingRepository
+import com.example.data.repository.MediaSearchingRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,6 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun provideMediaSearchingRepository(
-        mediaSearchingRemoteDataSource: MediaSearchingRemoteDataSource
-    ) = MediaSearchingRepository(mediaSearchingRemoteDataSource)
+    fun provideMediaSearchingRepository(mediaSearchingRemoteDataSource: MediaSearchingRemoteDataSource): MediaSearchingRepository =
+        MediaSearchingRepositoryImpl(mediaSearchingRemoteDataSource)
 }

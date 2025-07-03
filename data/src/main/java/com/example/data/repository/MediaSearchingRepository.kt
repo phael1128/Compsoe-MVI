@@ -1,28 +1,19 @@
 package com.example.data.repository
 
-import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
-import javax.inject.Inject
+import com.example.data.datasource.remote.response.ResImage
+import com.example.data.datasource.remote.response.ResVideo
+import com.example.data.model.ResponseResult
 
-class MediaSearchingRepository @Inject constructor(
-    private val mediaSearchingRemoteDataSource: MediaSearchingRemoteDataSource
-) {
+interface MediaSearchingRepository {
     suspend fun getImageResult(
         query: String,
         page: Int,
-        size: Int
-    ) = mediaSearchingRemoteDataSource.searchImageResult(
-        query = query,
-        page = page,
-        size = size
-    )
+        size: Int,
+    ): ResponseResult<ResImage>
 
     suspend fun getVideoResult(
         query: String,
         page: Int,
-        size: Int
-    ) = mediaSearchingRemoteDataSource.searchVideoResult(
-        query = query,
-        page = page,
-        size = size
-    )
+        size: Int,
+    ): ResponseResult<ResVideo>
 }
