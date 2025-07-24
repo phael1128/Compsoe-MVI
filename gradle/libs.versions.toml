@@ -19,6 +19,7 @@ retrofitVersion = "2.11.0"
 okhttp_version = "4.12.0"
 coilVersion = "2.4.0"
 javaxVersion="1"
+compose-webview = "0.31.3-beta"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 okhttp = { group = "com.squareup.okhttp3", name="logging-interceptor", version.ref = "okhttp_version" }
 javax = { group = "javax.inject", name="javax.inject", version.ref = "javaxVersion" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilVersion" }
+compose-webview = { module = "com.google.accompanist:accompanist-webview", version.ref="compose-webview" }
 
 
 [plugins]

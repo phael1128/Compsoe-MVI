@@ -61,6 +61,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // WebView
+    implementation(libs.compose.webview)
+
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
