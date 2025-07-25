@@ -21,13 +21,13 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun setIntent(intent: Intent) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _intent.emit(intent)
         }
     }
 
     private fun subscribeIntent() {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _intent.collect {
                 handleIntent(it)
             }
