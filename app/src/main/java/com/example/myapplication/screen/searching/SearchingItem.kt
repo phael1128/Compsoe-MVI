@@ -116,7 +116,7 @@ fun SearchingContent(
                 SearchingViewType.Video -> documentEntity.title ?: ""
                 else -> ""
             },
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
 
