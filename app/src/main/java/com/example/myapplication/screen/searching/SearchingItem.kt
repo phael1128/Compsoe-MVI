@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -29,8 +32,10 @@ import com.example.myapplication.util.getISOTimeToString
 fun SearchingItem(
     documentEntity: DocumentEntity,
     onClickSearchingItem: (DocumentEntity) -> Unit = {},
+    onClickSaveButton: () -> Unit = {}
 ) {
     val viewType = documentEntity.searchingViewType
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,17 +68,37 @@ fun SearchingItem(
                 modifier = Modifier.padding(4.dp)
             )
 
-            SearchingContent(documentEntity = documentEntity)
+            SearchingContent(
+                documentEntity = documentEntity,
+                modifier = Modifier.weight(1f)
+            )
+
+            if (!documentEntity.isSaveButtonVisible) {
+                IconButton(
+                    onClick = {
+                        onClickSaveButton.invoke()
+                    },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.vic_saved_icon),
+                        contentDescription = "저장하기"
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 fun SearchingContent(
-    documentEntity: DocumentEntity
+    documentEntity: DocumentEntity,
+    modifier: Modifier
 ) {
     val viewType = documentEntity.searchingViewType
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Row {
             Text(text = stringResource(R.string.view_type))
             Image(

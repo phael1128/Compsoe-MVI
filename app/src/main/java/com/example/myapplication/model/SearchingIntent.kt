@@ -6,4 +6,6 @@ open class SearchingIntent : Intent {
     object Searching : SearchingIntent()
 
     object SearchingMoreData : SearchingIntent()
+
+    data class SaveDocument(val position: Int) : SearchingIntent()
 }

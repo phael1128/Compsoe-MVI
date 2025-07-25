@@ -77,6 +77,9 @@ fun SearchingScreen(
                                 }
                             navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
                         },
+                         onClickSaveButton = {
+                             viewModel.setIntent(SearchingIntent.SaveDocument(index))
+                         }
                     )
                 }
             }
