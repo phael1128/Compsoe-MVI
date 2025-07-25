@@ -1,6 +1,5 @@
-package com.example.data.datasource
+package com.example.data.datasource.remote
 
-import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
 import com.example.data.datasource.remote.network.NetworkAPI
 import com.example.data.datasource.remote.response.ResImage
 import com.example.data.datasource.remote.response.ResVideo

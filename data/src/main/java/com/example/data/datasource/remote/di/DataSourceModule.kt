@@ -1,6 +1,6 @@
 package com.example.data.datasource.remote.di
 
-import com.example.data.datasource.MediaSearchingRemoteDataSourceImpl
+import com.example.data.datasource.remote.MediaSearchingRemoteDataSourceImpl
 import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
 import com.example.data.datasource.remote.network.NetworkAPI
 import dagger.Module
