@@ -16,6 +16,7 @@ class MediaSearchResultUseCaseImpl
     @Inject
     constructor(
         private val mediaSearchingRepository: MediaSearchingRepository,
+        private val documentSavedResultUseCase: DocumentSavedResultUseCase
     ) : MediaSearchResultUseCase {
         private var isLastImageResult = false
         private var isLastVideoResult = false
@@ -55,7 +56,6 @@ class MediaSearchResultUseCaseImpl
                         },
                     )
                 }
-
                 documentEntityList.sortByDescending { it.datetime }
                 return@withContext documentEntityList
             }
@@ -73,7 +73,10 @@ class MediaSearchResultUseCaseImpl
         ) {
             when (val result = mediaSearchingRepository.getImageResult(query, page, PAGE_SIZE)) {
                 is ResponseResult.Success -> {
-                    onSuccessCallback.invoke(result.body.toImageEntity())
+                    val imageResult = getSavedImageDocUrlLinkList().filterNotNull().let { savedImageDocUrlList ->
+                        result.body.toImageEntity(savedImageDocUrlList)
+                    }
+                    onSuccessCallback.invoke(imageResult)
                 }
                 is ResponseResult.Fail -> {
                     Log.d("phael", "error code : ${result.errorCode} error message : ${result.errorMessage}")
@@ -88,7 +91,10 @@ class MediaSearchResultUseCaseImpl
         ) {
             when (val result = mediaSearchingRepository.getVideoResult(query, page, PAGE_SIZE)) {
                 is ResponseResult.Success -> {
-                    onSuccessCallback.invoke(result.body.toVideoEntity())
+                    val videoResult = getSavedVideoUrlList().filterNotNull().let { savedVideoUrlList ->
+                        result.body.toVideoEntity(savedVideoUrlList)
+                    }
+                    onSuccessCallback.invoke(videoResult)
                 }
                 is ResponseResult.Fail -> {
                     Log.d("phael", "error code : ${result.errorCode} error message : ${result.errorMessage}")
@@ -104,6 +110,10 @@ class MediaSearchResultUseCaseImpl
         }
 
         private fun isNewKeyword(query: String) = query != lastKeyword
+
+        private suspend fun getSavedImageDocUrlLinkList() = documentSavedResultUseCase.getSavedDocumentEntity().map { it.docUrl }
+
+        private suspend fun getSavedVideoUrlList() = documentSavedResultUseCase.getSavedDocumentEntity().map { it.url }
 
         companion object {
             private const val PAGE_SIZE = 30

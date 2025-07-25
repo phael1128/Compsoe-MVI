@@ -18,8 +18,13 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideMediaSearchResultUseCase(
-        mediaSearchingRepository: MediaSearchingRepository
-    ): MediaSearchResultUseCase = MediaSearchResultUseCaseImpl(mediaSearchingRepository)
+        mediaSearchingRepository: MediaSearchingRepository,
+        documentSavedResultUseCase: DocumentSavedResultUseCase
+    ): MediaSearchResultUseCase = MediaSearchResultUseCaseImpl(
+        mediaSearchingRepository,
+        documentSavedResultUseCase
+    )
+
     @Provides
     @Singleton
     fun provideDocumentSavedResultUseCase(

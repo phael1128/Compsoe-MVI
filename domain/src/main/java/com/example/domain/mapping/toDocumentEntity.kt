@@ -22,12 +22,19 @@ fun ResDocument.toDocumentEntity() = DocumentEntity(
 )
 
 fun ArrayList<ResDocument>.toDocumentEntityList(
-    searchingViewType: SearchingViewType
+    searchingViewType: SearchingViewType,
+    callback: (url: String?) -> Boolean
 ): ArrayList<DocumentEntity> = arrayListOf<DocumentEntity>().apply {
     this@toDocumentEntityList.forEach {
         add(
             it.toDocumentEntity().apply {
                 this.searchingViewType = searchingViewType
+                this.isSaveButtonVisible = callback(if (searchingViewType == SearchingViewType.Image) docUrl else url)
+            }
+        )
+    }
+}
+
 fun SearchingEntity.toDocumentEntity() = DocumentEntity(
     collection = collection,
     thumbnailUrl = thumbnailUrl,

@@ -15,4 +15,5 @@ data class DocumentEntity(
     val url: String?,
     val datetime: String,
     var searchingViewType: SearchingViewType? = null,
+    var isSaveButtonVisible: Boolean = false
 )
