@@ -1,9 +1,9 @@
 package com.example.domain.usecase
 
-import com.example.domain.entity.DocumentEntity
+import com.example.domain.entity.Document
 
 interface MediaSearchResultUseCase {
-    suspend operator fun invoke(query: String): ArrayList<DocumentEntity>
+    suspend operator fun invoke(query: String): ArrayList<Document>
 
     fun getLastKeyword(): String
 

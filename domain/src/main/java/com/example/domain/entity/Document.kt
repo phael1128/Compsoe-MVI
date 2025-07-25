@@ -1,6 +1,6 @@
 package com.example.domain.entity
 
-data class DocumentEntity(
+data class Document(
     val collection: String?,
     val thumbnailUrl: String?,
     val imageUrl: String?,

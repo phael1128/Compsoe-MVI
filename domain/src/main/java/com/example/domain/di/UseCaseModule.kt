@@ -1,9 +1,9 @@
 package com.example.domain.di
 
 import com.example.data.repository.MediaSearchingRepository
-import com.example.data.repository.SavedSearchingRepository
-import com.example.domain.usecase.DocumentSavedResultUseCase
-import com.example.domain.usecase.DocumentSavedResultUseCaseImpl
+import com.example.data.repository.SavedDocumentRepository
+import com.example.domain.usecase.SavedDocumentResultUseCase
+import com.example.domain.usecase.SavedDocumentResultUseCaseImpl
 import com.example.domain.usecase.MediaSearchResultUseCase
 import com.example.domain.usecase.MediaSearchResultUseCaseImpl
 import dagger.Module
@@ -19,15 +19,15 @@ object UseCaseModule {
     @Singleton
     fun provideMediaSearchResultUseCase(
         mediaSearchingRepository: MediaSearchingRepository,
-        documentSavedResultUseCase: DocumentSavedResultUseCase
+        savedDocumentResultUseCase: SavedDocumentResultUseCase
     ): MediaSearchResultUseCase = MediaSearchResultUseCaseImpl(
         mediaSearchingRepository,
-        documentSavedResultUseCase
+        savedDocumentResultUseCase
     )
 
     @Provides
     @Singleton
     fun provideDocumentSavedResultUseCase(
-        savedSearchingRepository: SavedSearchingRepository
-    ): DocumentSavedResultUseCase = DocumentSavedResultUseCaseImpl(savedSearchingRepository)
+        savedDocumentRepository: SavedDocumentRepository
+    ): SavedDocumentResultUseCase = SavedDocumentResultUseCaseImpl(savedDocumentRepository)
 }

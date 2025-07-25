@@ -23,18 +23,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.domain.entity.DocumentEntity
+import com.example.domain.entity.Document
 import com.example.domain.entity.SearchingViewType
 import com.example.myapplication.R
 import com.example.myapplication.util.getISOTimeToString
 
 @Composable
 fun SearchingItem(
-    documentEntity: DocumentEntity,
-    onClickSearchingItem: (DocumentEntity) -> Unit = {},
+    document: Document,
+    onClickSearchingItem: (Document) -> Unit = {},
     onClickSaveButton: () -> Unit = {}
 ) {
-    val viewType = documentEntity.searchingViewType
+    val viewType = document.searchingViewType
 
     Card(
         modifier = Modifier
@@ -42,7 +42,7 @@ fun SearchingItem(
             .wrapContentHeight()
             .padding(vertical = 4.dp),
         onClick = {
-            onClickSearchingItem.invoke(documentEntity)
+            onClickSearchingItem.invoke(document)
         }
     ) {
         Row(
@@ -54,8 +54,8 @@ fun SearchingItem(
             ) {
                 AsyncImage(
                     model = when (viewType) {
-                        SearchingViewType.Image -> documentEntity.thumbnailUrl
-                        SearchingViewType.Video -> documentEntity.thumbnail
+                        SearchingViewType.Image -> document.thumbnailUrl
+                        SearchingViewType.Video -> document.thumbnail
                         else -> null
                     },
                     contentDescription = "Searching loaded Result",
@@ -69,11 +69,11 @@ fun SearchingItem(
             )
 
             SearchingContent(
-                documentEntity = documentEntity,
+                document = document,
                 modifier = Modifier.weight(1f)
             )
 
-            if (!documentEntity.isSaveButtonVisible) {
+            if (!document.isSaveButtonVisible) {
                 IconButton(
                     onClick = {
                         onClickSaveButton.invoke()
@@ -92,17 +92,17 @@ fun SearchingItem(
 
 @Composable
 fun SearchingContent(
-    documentEntity: DocumentEntity,
+    document: Document,
     modifier: Modifier
 ) {
-    val viewType = documentEntity.searchingViewType
+    val viewType = document.searchingViewType
     Column(
         modifier = modifier
     ) {
         Row {
             Text(text = stringResource(R.string.view_type))
             Image(
-                painter = when (documentEntity.searchingViewType) {
+                painter = when (document.searchingViewType) {
                     SearchingViewType.Video -> painterResource(id = R.drawable.vic_searching_result_video)
                     else -> painterResource(id = R.drawable.vic_searching_result_image)
                 },
@@ -112,8 +112,8 @@ fun SearchingContent(
 
         Text(
             text = when (viewType) {
-                SearchingViewType.Image -> documentEntity.collection ?: ""
-                SearchingViewType.Video -> documentEntity.title ?: ""
+                SearchingViewType.Image -> document.collection ?: ""
+                SearchingViewType.Video -> document.title ?: ""
                 else -> ""
             },
             maxLines = 2,
@@ -121,7 +121,7 @@ fun SearchingContent(
         )
 
         Text(
-            text = "${stringResource(R.string.created_time)} ${getISOTimeToString(documentEntity.datetime, stringResource(R.string.create_time_string))}"
+            text = "${stringResource(R.string.created_time)} ${getISOTimeToString(document.datetime, stringResource(R.string.create_time_string))}"
         )
     }
 }

@@ -1,9 +1,9 @@
 package com.example.domain.mapping
 
-import com.example.data.datasource.local.entity.SearchingEntity
-import com.example.domain.entity.DocumentEntity
+import com.example.data.datasource.local.entity.DocumentEntity
+import com.example.domain.entity.Document
 
-fun DocumentEntity.toSearchingEntity() : SearchingEntity = SearchingEntity(
+fun Document.toSearchingEntity() : DocumentEntity = DocumentEntity(
     collection = collection,
     thumbnailUrl = thumbnailUrl,
     imageUrl = imageUrl,

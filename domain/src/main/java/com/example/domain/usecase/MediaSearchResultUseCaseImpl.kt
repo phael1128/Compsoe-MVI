@@ -3,9 +3,9 @@ package com.example.domain.usecase
 import android.util.Log
 import com.example.data.model.ResponseResult
 import com.example.data.repository.MediaSearchingRepository
-import com.example.domain.entity.DocumentEntity
-import com.example.domain.entity.ImageEntity
-import com.example.domain.entity.VideoEntity
+import com.example.domain.entity.Document
+import com.example.domain.entity.Image
+import com.example.domain.entity.Video
 import com.example.domain.mapping.toImageEntity
 import com.example.domain.mapping.toVideoEntity
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ class MediaSearchResultUseCaseImpl
     @Inject
     constructor(
         private val mediaSearchingRepository: MediaSearchingRepository,
-        private val documentSavedResultUseCase: DocumentSavedResultUseCase
+        private val savedDocumentResultUseCase: SavedDocumentResultUseCase
     ) : MediaSearchResultUseCase {
         private var isLastImageResult = false
         private var isLastVideoResult = false
@@ -24,14 +24,14 @@ class MediaSearchResultUseCaseImpl
         private var imagePageCount = 1
         private var videoPageCount = 1
 
-        override suspend fun invoke(query: String): ArrayList<DocumentEntity> =
+        override suspend fun invoke(query: String): ArrayList<Document> =
             withContext(Dispatchers.IO) {
                 if (isNewKeyword(query)) {
                     setKeyWord(query)
                     initializeQueryData()
                 }
 
-                val documentEntityList = ArrayList<DocumentEntity>()
+                val documentList = ArrayList<Document>()
 
                 if (!isLastImageResult) {
                     getImageResult(
@@ -39,7 +39,7 @@ class MediaSearchResultUseCaseImpl
                         imagePageCount,
                         onSuccessCallback = { imageEntity ->
                             isLastImageResult = imageEntity.meta.is_end
-                            documentEntityList.addAll(imageEntity.documents)
+                            documentList.addAll(imageEntity.documents)
                             imagePageCount++
                         },
                     )
@@ -51,13 +51,13 @@ class MediaSearchResultUseCaseImpl
                         videoPageCount,
                         onSuccessCallback = { videoEntity ->
                             isLastVideoResult = videoEntity.meta.is_end
-                            documentEntityList.addAll(videoEntity.documents)
+                            documentList.addAll(videoEntity.documents)
                             videoPageCount++
                         },
                     )
                 }
-                documentEntityList.sortByDescending { it.datetime }
-                return@withContext documentEntityList
+                documentList.sortByDescending { it.datetime }
+                return@withContext documentList
             }
 
         override fun getLastKeyword() = lastKeyword
@@ -69,7 +69,7 @@ class MediaSearchResultUseCaseImpl
         private suspend fun getImageResult(
             query: String,
             page: Int,
-            onSuccessCallback: (ImageEntity) -> Unit,
+            onSuccessCallback: (Image) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getImageResult(query, page, PAGE_SIZE)) {
                 is ResponseResult.Success -> {
@@ -87,7 +87,7 @@ class MediaSearchResultUseCaseImpl
         private suspend fun getVideoResult(
             query: String,
             page: Int,
-            onSuccessCallback: (VideoEntity) -> Unit,
+            onSuccessCallback: (Video) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getVideoResult(query, page, PAGE_SIZE)) {
                 is ResponseResult.Success -> {
@@ -111,9 +111,9 @@ class MediaSearchResultUseCaseImpl
 
         private fun isNewKeyword(query: String) = query != lastKeyword
 
-        private suspend fun getSavedImageDocUrlLinkList() = documentSavedResultUseCase.getSavedDocumentEntity().map { it.docUrl }
+        private suspend fun getSavedImageDocUrlLinkList() = savedDocumentResultUseCase.getSavedDocumentEntity().map { it.docUrl }
 
-        private suspend fun getSavedVideoUrlList() = documentSavedResultUseCase.getSavedDocumentEntity().map { it.url }
+        private suspend fun getSavedVideoUrlList() = savedDocumentResultUseCase.getSavedDocumentEntity().map { it.url }
 
         companion object {
             private const val PAGE_SIZE = 30

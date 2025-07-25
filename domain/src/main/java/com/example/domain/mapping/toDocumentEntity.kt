@@ -1,11 +1,11 @@
 package com.example.domain.mapping
 
-import com.example.data.datasource.local.entity.SearchingEntity
+import com.example.data.datasource.local.entity.DocumentEntity
 import com.example.data.datasource.remote.response.ResDocument
-import com.example.domain.entity.DocumentEntity
+import com.example.domain.entity.Document
 import com.example.domain.entity.SearchingViewType
 
-fun ResDocument.toDocumentEntity() = DocumentEntity(
+fun ResDocument.toDocumentEntity() = Document(
     collection = collection,
     thumbnailUrl = thumbnailUrl,
     imageUrl = imageUrl,
@@ -24,7 +24,7 @@ fun ResDocument.toDocumentEntity() = DocumentEntity(
 fun ArrayList<ResDocument>.toDocumentEntityList(
     searchingViewType: SearchingViewType,
     callback: (url: String?) -> Boolean
-): ArrayList<DocumentEntity> = arrayListOf<DocumentEntity>().apply {
+): ArrayList<Document> = arrayListOf<Document>().apply {
     this@toDocumentEntityList.forEach {
         add(
             it.toDocumentEntity().apply {
@@ -35,7 +35,7 @@ fun ArrayList<ResDocument>.toDocumentEntityList(
     }
 }
 
-fun SearchingEntity.toDocumentEntity() = DocumentEntity(
+fun DocumentEntity.toDocumentEntity() = Document(
     collection = collection,
     thumbnailUrl = thumbnailUrl,
     imageUrl = imageUrl,
@@ -51,7 +51,7 @@ fun SearchingEntity.toDocumentEntity() = DocumentEntity(
     datetime = datetime
 )
 
-fun List<SearchingEntity>.toDocumentEntity(): List<DocumentEntity> = mutableListOf<DocumentEntity>().apply {
+fun List<DocumentEntity>.toDocumentEntity(): List<Document> = mutableListOf<Document>().apply {
     this@toDocumentEntity.forEach {
         add(
             it.toDocumentEntity().apply {
