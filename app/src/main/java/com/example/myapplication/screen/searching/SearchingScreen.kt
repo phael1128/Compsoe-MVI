@@ -66,7 +66,7 @@ fun SearchingScreen(
                 items(viewModel.searchingUiState.value.size) { index ->
                     SearchingItem(
                         documentEntity = viewModel.searchingUiState.value[index],
-                        onClick = { documentEntity ->
+                        onClickSearchingItem = { documentEntity ->
                             val uri =
                                 if (documentEntity.searchingViewType == SearchingViewType.Image) {
                                     documentEntity.docUrl
