@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.domain.entity.DocumentEntity
+import com.example.domain.usecase.DocumentSavedResultUseCase
 import com.example.domain.usecase.MediaSearchResultUseCase
 import com.example.myapplication.common.Intent
 import com.example.myapplication.model.SearchingIntent
@@ -16,6 +17,7 @@ class SearchingViewModel
     @Inject
     constructor(
         private val mediaSearchResultUseCase: MediaSearchResultUseCase,
+        private val documentSavedResultUseCase: DocumentSavedResultUseCase
     ) : BaseViewModel() {
         // 유저가 검색한 키워드
         val userSearchingData: MutableState<String> = mutableStateOf("")
@@ -32,6 +34,9 @@ class SearchingViewModel
                 }
                 is SearchingIntent.SearchingMoreData -> {
                     searchData()
+                }
+                is SearchingIntent.SaveDocument -> {
+                    saveDocument(intent.position)
                 }
             }
         }
@@ -64,5 +69,12 @@ class SearchingViewModel
 
         private fun initializeSearchingUiState() {
             searchingUiState.value = emptyList()
+        }
+
+        private fun saveDocument(position: Int) {
+            viewModelScope.launch(coroutineExceptionHandler) {
+                val saveDocument = searchingUiState.value[position]
+                documentSavedResultUseCase.insertDocumentEntity(saveDocument)
+            }
         }
     }
