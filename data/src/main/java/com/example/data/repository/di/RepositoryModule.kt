@@ -1,11 +1,11 @@
 package com.example.data.repository.di
 
-import com.example.data.datasource.local.SearchingLocalDataSource
+import com.example.data.datasource.local.DocumentLocalDataSource
 import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
 import com.example.data.repository.MediaSearchingRepository
 import com.example.data.repository.MediaSearchingRepositoryImpl
-import com.example.data.repository.SavedSearchingRepository
-import com.example.data.repository.SavedSearchingRepositoryImpl
+import com.example.data.repository.SavedDocumentRepository
+import com.example.data.repository.SavedDocumentRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +24,6 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideSavedSearchingRepository(
-        searchingLocalDataSource: SearchingLocalDataSource
-    ): SavedSearchingRepository = SavedSearchingRepositoryImpl(searchingLocalDataSource)
+        documentLocalDataSource: DocumentLocalDataSource
+    ): SavedDocumentRepository = SavedDocumentRepositoryImpl(documentLocalDataSource)
 }

@@ -1,7 +1,7 @@
 package com.example.data.datasource.local.di
 
-import com.example.data.datasource.local.SearchingLocalDataSource
-import com.example.data.datasource.local.SearchingLocalDataSourceImpl
+import com.example.data.datasource.local.DocumentLocalDataSource
+import com.example.data.datasource.local.DocumentLocalDataSourceImpl
 import com.example.data.datasource.local.dao.SearchingDao
 import dagger.Module
 import dagger.Provides
@@ -16,5 +16,5 @@ class DataSourceModule {
     @Singleton
     fun provideSearchingDataSource(
         searchingDao: SearchingDao
-    ): SearchingLocalDataSource = SearchingLocalDataSourceImpl(searchingDao)
+    ): DocumentLocalDataSource = DocumentLocalDataSourceImpl(searchingDao)
 }

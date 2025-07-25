@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "searching_table",
     indices = [Index(value = ["url"], unique = true)]
 )
-data class SearchingEntity(
+data class DocumentEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo(name = "collection") val collection: String?,
     @ColumnInfo(name = "thumbnailUrl") val thumbnailUrl: String?,
