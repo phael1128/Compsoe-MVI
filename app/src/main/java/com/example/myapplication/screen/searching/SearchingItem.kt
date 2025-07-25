@@ -28,7 +28,7 @@ import com.example.myapplication.util.getISOTimeToString
 @Composable
 fun SearchingItem(
     documentEntity: DocumentEntity,
-    onClick: (DocumentEntity) -> Unit = {}
+    onClickSearchingItem: (DocumentEntity) -> Unit = {},
 ) {
     val viewType = documentEntity.searchingViewType
     Card(
@@ -37,10 +37,13 @@ fun SearchingItem(
             .wrapContentHeight()
             .padding(vertical = 4.dp),
         onClick = {
-            onClick.invoke(documentEntity)
+            onClickSearchingItem.invoke(documentEntity)
         }
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Box(
                 modifier = Modifier.size(76.dp)
             ) {
