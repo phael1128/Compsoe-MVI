@@ -54,4 +54,9 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     // okHttp
     implementation(libs.okhttp)
+
+    // room
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }
