@@ -12,7 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.myapplication.common.SearchingRoute
-import com.example.myapplication.screen.saved.SavedSearchingScreen
+import com.example.myapplication.screen.saved.SavedDocumentScreen
 import com.example.myapplication.screen.searching.SearchingDetailScreen
 import com.example.myapplication.screen.searching.SearchingScreen
 
@@ -40,7 +40,7 @@ fun MainScreen() {
                 SearchingScreen(navController)
             }
             composable(SearchingRoute.SAVED_SEARCHING_SCREEN.routeName) {
-                SavedSearchingScreen()
+                SavedDocumentScreen()
             }
             composable(
                 "${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/{uri}",

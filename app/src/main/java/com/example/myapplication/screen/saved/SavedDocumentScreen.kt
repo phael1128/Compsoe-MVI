@@ -5,8 +5,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun SavedSearchingScreen() {
+fun SavedDocumentScreen() {
     Column {
         Text("저장된 검색 결과 화면")
     }
 }
+
