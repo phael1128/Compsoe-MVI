@@ -5,6 +5,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +17,8 @@ import com.example.myapplication.common.SearchingRoute
 import com.example.myapplication.screen.saved.SavedDocumentScreen
 import com.example.myapplication.screen.searching.SearchingDetailScreen
 import com.example.myapplication.screen.searching.SearchingScreen
+import com.example.myapplication.viewmodels.SavedDocumentViewModel
+import com.example.myapplication.viewmodels.SearchingViewModel
 
 @Composable
 fun MainScreen() {
@@ -37,10 +41,26 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(SearchingRoute.SEARCHING_SCREEN.routeName) {
-                SearchingScreen(navController)
+                val viewModel: SearchingViewModel = hiltViewModel()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                SearchingScreen(
+                    uiState = uiState,
+                    effectFlow = viewModel.effect,
+                    setEvent = viewModel::setEvent,
+                    onNavigateToDetail = { uri ->
+                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
+                    },
+                )
             }
             composable(SearchingRoute.SAVED_SEARCHING_SCREEN.routeName) {
-                SavedDocumentScreen()
+                val viewModel: SavedDocumentViewModel = hiltViewModel()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                SavedDocumentScreen(
+                    uiState = uiState,
+                    setEvent = viewModel::setEvent,
+                )
             }
             composable(
                 "${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/{uri}",

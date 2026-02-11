@@ -27,19 +27,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.domain.entity.SearchingViewType
 import com.example.myapplication.R
-import com.example.myapplication.common.SearchingRoute
-import com.example.myapplication.model.SearchingIntent
+import com.example.myapplication.contract.SearchingContract
 import com.example.myapplication.util.isFinishedScroll
-import com.example.myapplication.viewmodels.SearchingViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SearchingScreen(
-    navController: NavController,
-    viewModel: SearchingViewModel = hiltViewModel(),
+    uiState: SearchingContract.UiState,
+    effectFlow: Flow<SearchingContract.Effect>?,
+    setEvent: (SearchingContract.Event) -> Unit,
+    onNavigateToDetail: (String) -> Unit,
 ) {
     val columnListScrollState = rememberLazyListState()
 
@@ -48,13 +48,26 @@ fun SearchingScreen(
             columnListScrollState.isFinishedScroll()
         }.collect { isFinish ->
             if (isFinish) {
-                viewModel.setIntent(SearchingIntent.SearchingMoreData)
+                setEvent(SearchingContract.Event.OnLoadMoreData)
+            }
+        }
+    }
+
+    LaunchedEffect(effectFlow) {
+        effectFlow?.collectLatest { effect ->
+            when (effect) {
+                is SearchingContract.Effect.NavigateToDetail -> {
+                    onNavigateToDetail(effect.uri)
+                }
+                is SearchingContract.Effect.ShowError -> {
+                    // TODO: Show error toast/snackbar
+                }
             }
         }
     }
 
     Box {
-        LoadingProgress(viewModel.isLoadingState.value)
+        LoadingProgress(uiState.isLoading)
         Column {
             LazyColumn(
                 state = columnListScrollState,
@@ -63,43 +76,49 @@ fun SearchingScreen(
                         .weight(1f)
                         .padding(horizontal = 4.dp),
             ) {
-                items(viewModel.searchingUiState.value.size) { index ->
+                items(uiState.documents.size) { index ->
                     SearchingItem(
-                        document = viewModel.searchingUiState.value[index],
-                        onClickSearchingItem = { documentEntity ->
+                        document = uiState.documents[index],
+                        onClickSearchingItem = { document ->
                             val uri =
-                                if (documentEntity.searchingViewType == SearchingViewType.Image) {
-                                    documentEntity.docUrl
+                                if (document.searchingViewType == SearchingViewType.Image) {
+                                    document.docUrl
                                 } else {
-                                    documentEntity.url
+                                    document.url
                                 }.let { selectedUrlString ->
                                     Uri.encode(selectedUrlString)
                                 }
-                            navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
+                            onNavigateToDetail(uri)
                         },
-                         onClickSaveButton = {
-                             viewModel.setIntent(SearchingIntent.SaveDocument(index))
-                         }
+                        onClickSaveButton = {
+                            setEvent(SearchingContract.Event.OnSaveDocument(index))
+                        },
                     )
                 }
             }
-            UserSearchingTextField()
+            UserSearchingTextField(
+                searchQuery = uiState.searchQuery,
+                onQueryChanged = { setEvent(SearchingContract.Event.OnSearchQueryChanged(it)) },
+                onSearchClick = { setEvent(SearchingContract.Event.OnSearchClick) },
+            )
         }
     }
 }
 
 @Composable
-fun UserSearchingTextField(viewModel: SearchingViewModel = hiltViewModel()) {
+fun UserSearchingTextField(
+    searchQuery: String,
+    onQueryChanged: (String) -> Unit,
+    onSearchClick: () -> Unit,
+) {
     Row(
         modifier =
             Modifier
                 .padding(4.dp),
     ) {
         TextField(
-            value = viewModel.userSearchingData.value,
-            onValueChange = {
-                viewModel.userSearchingData.value = it
-            },
+            value = searchQuery,
+            onValueChange = onQueryChanged,
             modifier =
                 Modifier
                     .weight(1f)
@@ -118,9 +137,7 @@ fun UserSearchingTextField(viewModel: SearchingViewModel = hiltViewModel()) {
                 Modifier
                     .wrapContentSize()
                     .align(Alignment.CenterVertically),
-            onClick = {
-                viewModel.setIntent(SearchingIntent.Searching)
-            },
+            onClick = onSearchClick,
         ) {
             Text(
                 text = stringResource(R.string.searching_data),

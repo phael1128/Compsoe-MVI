@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":data"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
     implementation(libs.compose.navigation)
     implementation(platform(libs.androidx.compose.bom))

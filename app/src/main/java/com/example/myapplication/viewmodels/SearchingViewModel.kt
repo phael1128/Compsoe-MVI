@@ -1,13 +1,9 @@
 package com.example.myapplication.viewmodels
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.example.domain.entity.Document
-import com.example.domain.usecase.SavedDocumentResultUseCase
 import com.example.domain.usecase.MediaSearchResultUseCase
-import com.example.myapplication.common.Intent
-import com.example.myapplication.model.SearchingIntent
+import com.example.domain.usecase.SavedDocumentResultUseCase
+import com.example.myapplication.contract.SearchingContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,38 +13,35 @@ class SearchingViewModel
     @Inject
     constructor(
         private val mediaSearchResultUseCase: MediaSearchResultUseCase,
-        private val savedDocumentResultUseCase: SavedDocumentResultUseCase
-    ) : BaseViewModel() {
-        // 유저가 검색한 키워드
-        val userSearchingData: MutableState<String> = mutableStateOf("")
+        private val savedDocumentResultUseCase: SavedDocumentResultUseCase,
+    ) : BaseViewModel<SearchingContract.UiState, SearchingContract.Event, SearchingContract.Effect>() {
 
-        // 유저가 검색한 결과
-        val searchingUiState: MutableState<List<Document>> = mutableStateOf(emptyList())
+        override fun createInitialState(): SearchingContract.UiState = SearchingContract.UiState()
 
-        val isLoadingState: MutableState<Boolean> = mutableStateOf(false)
-
-        override fun handleIntent(intent: Intent) {
-            when (intent) {
-                is SearchingIntent.Searching -> {
+        override fun handleEvents(event: SearchingContract.Event) {
+            when (event) {
+                is SearchingContract.Event.OnSearchQueryChanged -> {
+                    setState { copy(searchQuery = event.query) }
+                }
+                is SearchingContract.Event.OnSearchClick -> {
                     getSearchingResult()
                 }
-                is SearchingIntent.SearchingMoreData -> {
+                is SearchingContract.Event.OnLoadMoreData -> {
                     searchData()
                 }
-                is SearchingIntent.SaveDocument -> {
-                    saveDocument(intent.position)
+                is SearchingContract.Event.OnSaveDocument -> {
+                    saveDocument(event.position)
                 }
             }
         }
 
         private fun getSearchingResult() {
             viewModelScope.launch(coroutineExceptionHandler) {
-                if (mediaSearchResultUseCase.getLastKeyword() == userSearchingData.value) {
+                if (mediaSearchResultUseCase.getLastKeyword() == currentState.searchQuery) {
                     return@launch
                 }
 
-                initializeSearchingUiState()
-                isLoadingState.value = true
+                setState { copy(documents = emptyList(), isLoading = true) }
                 searchMoreData()
             }
         }
@@ -60,20 +53,13 @@ class SearchingViewModel
         }
 
         private suspend fun searchMoreData() {
-            searchingUiState.value +=
-                mediaSearchResultUseCase(
-                    query = userSearchingData.value,
-                )
-            isLoadingState.value = false
-        }
-
-        private fun initializeSearchingUiState() {
-            searchingUiState.value = emptyList()
+            val newDocuments = mediaSearchResultUseCase(query = currentState.searchQuery)
+            setState { copy(documents = documents + newDocuments, isLoading = false) }
         }
 
         private fun saveDocument(position: Int) {
             viewModelScope.launch(coroutineExceptionHandler) {
-                val saveDocument = searchingUiState.value[position]
+                val saveDocument = currentState.documents[position]
                 savedDocumentResultUseCase.insertDocumentEntity(saveDocument)
             }
         }

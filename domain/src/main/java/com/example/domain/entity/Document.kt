@@ -17,3 +17,19 @@ data class Document(
     var searchingViewType: SearchingViewType? = null,
     var isSaveButtonVisible: Boolean = false
 )
+
+fun fakeDocument() = Document(
+    collection = "fake collection",
+    thumbnailUrl = "fake thumbnailUrl",
+    imageUrl = "fake imageUrl",
+    width = 1L,
+    height = 1L,
+    displaySiteName = "fake displaySiteName",
+    docUrl = "fake docUrl",
+    author = "fake author",
+    playTime = 30,
+    thumbnail = "fake thumbnail",
+    title = "fake title",
+    url = "fake url",
+    datetime = "",
+)
