@@ -2,10 +2,10 @@ package com.example.data.repository.di
 
 import com.example.data.datasource.local.DocumentLocalDataSource
 import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
-import com.example.data.repository.MediaSearchingRepository
 import com.example.data.repository.MediaSearchingRepositoryImpl
-import com.example.data.repository.SavedDocumentRepository
 import com.example.data.repository.SavedDocumentRepositoryImpl
+import com.example.domain.repository.MediaSearchingRepository
+import com.example.domain.repository.SavedDocumentRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

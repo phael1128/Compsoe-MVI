@@ -1,13 +1,11 @@
 package com.example.domain.usecase
 
 import android.util.Log
-import com.example.data.model.ResponseResult
-import com.example.data.repository.MediaSearchingRepository
 import com.example.domain.entity.Document
 import com.example.domain.entity.Image
 import com.example.domain.entity.Video
-import com.example.domain.mapping.toImageEntity
-import com.example.domain.mapping.toVideoEntity
+import com.example.domain.model.DomainResult
+import com.example.domain.repository.MediaSearchingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -72,13 +70,14 @@ class MediaSearchResultUseCaseImpl
             onSuccessCallback: (Image) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getImageResult(query, page, PAGE_SIZE)) {
-                is ResponseResult.Success -> {
-                    val imageResult = getSavedImageDocUrlLinkList().filterNotNull().let { savedImageDocUrlList ->
-                        result.body.toImageEntity(savedImageDocUrlList)
+                is DomainResult.Success -> {
+                    val savedDocUrlList = getSavedImageDocUrlLinkList().filterNotNull()
+                    result.body.documents.forEach { document ->
+                        document.isSaveButtonVisible = savedDocUrlList.contains(document.docUrl)
                     }
-                    onSuccessCallback.invoke(imageResult)
+                    onSuccessCallback.invoke(result.body)
                 }
-                is ResponseResult.Fail -> {
+                is DomainResult.Fail -> {
                     Log.d("phael", "error code : ${result.errorCode} error message : ${result.errorMessage}")
                 }
             }
@@ -90,13 +89,14 @@ class MediaSearchResultUseCaseImpl
             onSuccessCallback: (Video) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getVideoResult(query, page, PAGE_SIZE)) {
-                is ResponseResult.Success -> {
-                    val videoResult = getSavedVideoUrlList().filterNotNull().let { savedVideoUrlList ->
-                        result.body.toVideoEntity(savedVideoUrlList)
+                is DomainResult.Success -> {
+                    val savedVideoUrlList = getSavedVideoUrlList().filterNotNull()
+                    result.body.documents.forEach { document ->
+                        document.isSaveButtonVisible = savedVideoUrlList.contains(document.url)
                     }
-                    onSuccessCallback.invoke(videoResult)
+                    onSuccessCallback.invoke(result.body)
                 }
-                is ResponseResult.Fail -> {
+                is DomainResult.Fail -> {
                     Log.d("phael", "error code : ${result.errorCode} error message : ${result.errorMessage}")
                 }
             }

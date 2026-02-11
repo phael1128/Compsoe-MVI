@@ -1,12 +1,12 @@
-package com.example.data.model
+package com.example.domain.model
 
-sealed class ResponseResult<T> {
+sealed class DomainResult<T> {
     data class Success<T>(
         val body: T,
-    ) : ResponseResult<T>()
+    ) : DomainResult<T>()
 
     data class Fail<T>(
         val errorCode: Int,
         val errorMessage: String,
-    ) : ResponseResult<T>()
+    ) : DomainResult<T>()
 }

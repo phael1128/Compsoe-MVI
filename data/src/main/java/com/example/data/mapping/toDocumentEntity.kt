@@ -1,11 +1,11 @@
-package com.example.domain.mapping
+package com.example.data.mapping
 
 import com.example.data.datasource.local.entity.DocumentEntity
 import com.example.data.datasource.remote.response.ResDocument
 import com.example.domain.entity.Document
 import com.example.domain.entity.SearchingViewType
 
-fun ResDocument.toDocumentEntity() = Document(
+fun ResDocument.toDocument() = Document(
     collection = collection,
     thumbnailUrl = thumbnailUrl,
     imageUrl = imageUrl,
@@ -21,21 +21,19 @@ fun ResDocument.toDocumentEntity() = Document(
     datetime = datetime
 )
 
-fun ArrayList<ResDocument>.toDocumentEntityList(
+fun ArrayList<ResDocument>.toDocumentList(
     searchingViewType: SearchingViewType,
-    callback: (url: String?) -> Boolean
 ): ArrayList<Document> = arrayListOf<Document>().apply {
-    this@toDocumentEntityList.forEach {
+    this@toDocumentList.forEach {
         add(
-            it.toDocumentEntity().apply {
+            it.toDocument().apply {
                 this.searchingViewType = searchingViewType
-                this.isSaveButtonVisible = callback(if (searchingViewType == SearchingViewType.Image) docUrl else url)
             }
         )
     }
 }
 
-fun DocumentEntity.toDocumentEntity() = Document(
+fun DocumentEntity.toDocument() = Document(
     collection = collection,
     thumbnailUrl = thumbnailUrl,
     imageUrl = imageUrl,
@@ -51,16 +49,28 @@ fun DocumentEntity.toDocumentEntity() = Document(
     datetime = datetime
 )
 
-fun List<DocumentEntity>.toDocumentEntity(): List<Document> = mutableListOf<Document>().apply {
-    this@toDocumentEntity.forEach {
-        add(
-            it.toDocumentEntity().apply {
-                searchingViewType = it.title.takeIf {
-                    !docUrl.isNullOrEmpty()
-                }?.let {
-                    SearchingViewType.Image
-                } ?: SearchingViewType.Video
-            }
-        )
+fun List<DocumentEntity>.toDocumentList(): List<Document> = map { entity ->
+    entity.toDocument().apply {
+        searchingViewType = entity.title.takeIf {
+            !entity.docUrl.isNullOrEmpty()
+        }?.let {
+            SearchingViewType.Image
+        } ?: SearchingViewType.Video
     }
 }
+
+fun Document.toDocumentEntity() = DocumentEntity(
+    collection = collection,
+    thumbnailUrl = thumbnailUrl,
+    imageUrl = imageUrl,
+    width = width,
+    height = height,
+    displaySiteName = displaySiteName,
+    docUrl = docUrl,
+    author = author,
+    playTime = playTime,
+    thumbnail = thumbnail,
+    title = title,
+    url = url,
+    datetime = datetime
+)

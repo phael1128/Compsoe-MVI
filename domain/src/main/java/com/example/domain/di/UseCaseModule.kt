@@ -1,7 +1,7 @@
 package com.example.domain.di
 
-import com.example.data.repository.MediaSearchingRepository
-import com.example.data.repository.SavedDocumentRepository
+import com.example.domain.repository.MediaSearchingRepository
+import com.example.domain.repository.SavedDocumentRepository
 import com.example.domain.usecase.SavedDocumentResultUseCase
 import com.example.domain.usecase.SavedDocumentResultUseCaseImpl
 import com.example.domain.usecase.MediaSearchResultUseCase
