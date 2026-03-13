@@ -5,10 +5,8 @@ import com.example.domain.entity.Image
 import com.example.domain.entity.Video
 import com.example.domain.model.DomainResult
 import com.example.domain.repository.MediaSearchingRepository
-import javax.inject.Inject
 
 class MediaSearchResultUseCase
-    @Inject
     constructor(
         private val mediaSearchingRepository: MediaSearchingRepository,
         private val savedDocumentResultUseCase: SavedDocumentResultUseCase,
@@ -26,11 +24,15 @@ class MediaSearchResultUseCase
             }
 
             val documentList = ArrayList<Document>()
+            val savedDocuments = savedDocumentResultUseCase.getSavedDocumentEntity()
+            val savedImageDocUrlSet = savedDocuments.mapNotNullTo(hashSetOf()) { it.docUrl }
+            val savedVideoUrlSet = savedDocuments.mapNotNullTo(hashSetOf()) { it.url }
 
             if (!isLastImageResult) {
                 getImageResult(
                     query,
                     imagePageCount,
+                    savedImageDocUrlSet,
                     onSuccessCallback = { imageEntity ->
                         isLastImageResult = imageEntity.meta.is_end
                         documentList.addAll(imageEntity.documents)
@@ -43,6 +45,7 @@ class MediaSearchResultUseCase
                 getVideoResult(
                     query,
                     videoPageCount,
+                    savedVideoUrlSet,
                     onSuccessCallback = { videoEntity ->
                         isLastVideoResult = videoEntity.meta.is_end
                         documentList.addAll(videoEntity.documents)
@@ -63,40 +66,36 @@ class MediaSearchResultUseCase
         private suspend fun getImageResult(
             query: String,
             page: Int,
+            savedImageDocUrlSet: Set<String>,
             onSuccessCallback: (Image) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getImageResult(query, page, PAGE_SIZE)) {
                 is DomainResult.Success -> {
-                    val savedDocUrlList = getSavedImageDocUrlLinkList().filterNotNull()
                     result.body.documents.forEach { document ->
-                        document.isSaveButtonVisible = savedDocUrlList.contains(document.docUrl)
+                        document.isSaveButtonVisible = document.docUrl in savedImageDocUrlSet
                     }
                     onSuccessCallback.invoke(result.body)
                 }
 
-                is DomainResult.Fail -> {
-                    Unit
-                }
+                is DomainResult.Fail -> Unit
             }
         }
 
         private suspend fun getVideoResult(
             query: String,
             page: Int,
+            savedVideoUrlSet: Set<String>,
             onSuccessCallback: (Video) -> Unit,
         ) {
             when (val result = mediaSearchingRepository.getVideoResult(query, page, PAGE_SIZE)) {
                 is DomainResult.Success -> {
-                    val savedVideoUrlList = getSavedVideoUrlList().filterNotNull()
                     result.body.documents.forEach { document ->
-                        document.isSaveButtonVisible = savedVideoUrlList.contains(document.url)
+                        document.isSaveButtonVisible = document.url in savedVideoUrlSet
                     }
                     onSuccessCallback.invoke(result.body)
                 }
 
-                is DomainResult.Fail -> {
-                    Unit
-                }
+                is DomainResult.Fail -> Unit
             }
         }
 
@@ -108,10 +107,6 @@ class MediaSearchResultUseCase
         }
 
         private fun isNewKeyword(query: String) = query != lastKeyword
-
-        private suspend fun getSavedImageDocUrlLinkList() = savedDocumentResultUseCase.getSavedDocumentEntity().map { it.docUrl }
-
-        private suspend fun getSavedVideoUrlList() = savedDocumentResultUseCase.getSavedDocumentEntity().map { it.url }
 
         companion object {
             private const val PAGE_SIZE = 30

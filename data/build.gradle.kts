@@ -11,7 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,11 +50,8 @@ dependencies {
     // gson
     implementation(libs.gson)
 
-    // retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    // okHttp
-    implementation(libs.okhttp)
+    // coroutines
+    implementation(libs.kotlinx.coroutines.core)
 
     // room
     implementation(libs.room)

@@ -1,8 +1,8 @@
 package com.example.data.datasource.remote.di
 
-import com.example.data.datasource.remote.MediaSearchingRemoteDataSourceImpl
 import com.example.data.datasource.remote.MediaSearchingRemoteDataSource
-import com.example.data.datasource.remote.network.NetworkAPI
+import com.example.data.datasource.remote.MediaSearchingRemoteDataSourceImpl
+import com.example.data.datasource.remote.network.HttpUrlConnectionClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ object DataSourceModule {
     @Provides
     @Singleton
     fun provideMediaSearchingRemoteDataSource(
-        networkAPI: NetworkAPI
-    ): MediaSearchingRemoteDataSource = MediaSearchingRemoteDataSourceImpl(networkAPI)
+        httpUrlConnectionClient: HttpUrlConnectionClient,
+    ): MediaSearchingRemoteDataSource = MediaSearchingRemoteDataSourceImpl(httpUrlConnectionClient)
 }
