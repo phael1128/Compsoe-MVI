@@ -14,8 +14,8 @@ class MediaSearchResultUseCase
         private var isLastImageResult = false
         private var isLastVideoResult = false
         private var lastKeyword = ""
-        private var imagePageCount = 1
-        private var videoPageCount = 1
+        private var imagePageCount = FIRST_PAGE
+        private var videoPageCount = FIRST_PAGE
 
         suspend operator fun invoke(query: String): ArrayList<Document> {
             if (isNewKeyword(query)) {
@@ -100,15 +100,16 @@ class MediaSearchResultUseCase
         }
 
         private fun initializeQueryData() {
-            imagePageCount = 0
+            imagePageCount = FIRST_PAGE
             isLastImageResult = false
-            videoPageCount = 0
+            videoPageCount = FIRST_PAGE
             isLastVideoResult = false
         }
 
         private fun isNewKeyword(query: String) = query != lastKeyword
 
         companion object {
+            private const val FIRST_PAGE = 1
             private const val PAGE_SIZE = 30
         }
     }
