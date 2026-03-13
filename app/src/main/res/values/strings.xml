@@ -6,4 +6,13 @@
     <string name="view_type">viewType : </string>
     <string name="created_time">작성일자 : </string>
     <string name="create_time_string">yyyy년 MM월 dd일 hh:mm</string>
+    <string name="saved_documents_title">Saved Archive</string>
+    <string name="saved_documents_subtitle">다시 보고 싶은 결과들을 차분하게 모아둔 공간입니다.</string>
+    <string name="saved_documents_count">%1$d개의 항목</string>
+    <string name="saved_documents_empty_title">아직 저장한 항목이 없어요</string>
+    <string name="saved_documents_empty_message">검색 결과에서 저장 버튼을 누르면 이곳에 차곡차곡 쌓입니다.</string>
+    <string name="saved_status_badge">저장됨</string>
+    <string name="saved_document_thumbnail">저장된 문서 썸네일</string>
+    <string name="saved_document_fallback_title">저장한 문서</string>
+    <string name="saved_document_fallback_subtitle">다시 열어볼 수 있는 항목</string>
 </resources>

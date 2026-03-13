@@ -1,22 +1,29 @@
 package com.example.myapplication.screen.saved
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,60 +36,264 @@ import com.example.myapplication.util.getISOTimeToString
 
 @Composable
 fun SavedDocumentItem(
-    document: Document
+    document: Document,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
+    val shape = RoundedCornerShape(28.dp)
+    val viewType = document.searchingViewType
+    val fallbackTitle = stringResource(R.string.saved_document_fallback_title)
+    val fallbackSubtitle = stringResource(R.string.saved_document_fallback_subtitle)
+
     Card(
-        onClick = {
-
-        },
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
-            .background(Color.LightGray)
-            .fillMaxWidth()
-            .wrapContentHeight()
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = shape,
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = 8.dp,
+                pressedElevation = 12.dp,
+            ),
     ) {
-        val viewType = document.searchingViewType
         Column {
-            AsyncImage(
-                model = when (viewType) {
-                    SearchingViewType.Image -> document.thumbnailUrl
-                    SearchingViewType.Video -> document.thumbnail
-                    else -> null
-                },
-                contentDescription = "saved document loaded Result",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .sizeIn(minHeight = 120.dp),
-                contentScale = ContentScale.FillBounds
-            )
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(0.92f)
+                        .clip(shape),
+            ) {
+                ThumbnailSection(document = document)
 
-            Spacer(
-                modifier = Modifier.padding(8.dp)
-            )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                ) {
+                    MediaTypeBadge(viewType = viewType)
+                    SavedStatusBadge()
+                }
+            }
 
-            Text(
-                text = when (viewType) {
-                    SearchingViewType.Image -> document.collection ?: ""
-                    SearchingViewType.Video -> document.title ?: ""
-                    else -> ""
-                },
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+            ) {
+                Text(
+                    text = document.primaryLabel(fallbackTitle),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
 
-            Text(
-                text = "${stringResource(R.string.created_time)} ${
-                    getISOTimeToString(document.datetime, stringResource(
-                        R.string.create_time_string)
+                Surface(
+                    shape = RoundedCornerShape(999.dp),
+                    color = viewType.badgePalette().containerColor.copy(alpha = 0.18f),
+                ) {
+                    Text(
+                        text = document.secondaryLabel(fallbackSubtitle),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     )
-                }"
-            )
+                }
+
+                Text(
+                    text = getISOTimeToString(document.datetime, stringResource(R.string.create_time_string)),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
 
+@Composable
+private fun ThumbnailSection(document: Document) {
+    val thumbnailModel = document.thumbnailModel()
+
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(
+                    brush =
+                        Brush.linearGradient(
+                            colors =
+                                listOf(
+                                    Color(0xFF1A2D3C),
+                                    Color(0xFF365C73),
+                                    Color(0xFFCC7A5A),
+                                ),
+                        ),
+                ),
+    ) {
+        if (thumbnailModel != null) {
+            AsyncImage(
+                model = thumbnailModel,
+                contentDescription = stringResource(R.string.saved_document_thumbnail),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+        } else {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Text(
+                    text = document.searchingViewType.badgeLabel(),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White.copy(alpha = 0.92f),
+                )
+            }
+        }
+
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush =
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.Transparent,
+                                        Color(0x12000000),
+                                        Color(0xAA09111A),
+                                    ),
+                            ),
+                    ),
+        )
+    }
+}
+
+@Composable
+private fun MediaTypeBadge(viewType: SearchingViewType?) {
+    val palette = viewType.badgePalette()
+
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = palette.containerColor,
+    ) {
+        Text(
+            text = viewType.badgeLabel(),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = palette.contentColor,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+        )
+    }
+}
+
+@Composable
+private fun SavedStatusBadge() {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = Color.White.copy(alpha = 0.2f),
+    ) {
+        Text(
+            text = stringResource(R.string.saved_status_badge),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+        )
+    }
+}
+
+private data class BadgePalette(
+    val containerColor: Color,
+    val contentColor: Color,
+)
+
+private fun SearchingViewType?.badgePalette(): BadgePalette =
+    when (this) {
+        SearchingViewType.Video ->
+            BadgePalette(
+                containerColor = Color(0xFFFFE2D2),
+                contentColor = Color(0xFF9E4524),
+            )
+        SearchingViewType.Image ->
+            BadgePalette(
+                containerColor = Color(0xFFDDF3F2),
+                contentColor = Color(0xFF145C63),
+            )
+        null ->
+            BadgePalette(
+                containerColor = Color(0xFFE9EEF2),
+                contentColor = Color(0xFF41515E),
+            )
+    }
+
+private fun SearchingViewType?.badgeLabel(): String =
+    when (this) {
+        SearchingViewType.Image -> "IMAGE"
+        SearchingViewType.Video -> "VIDEO"
+        null -> "MEDIA"
+    }
+
+private fun Document.thumbnailModel(): String? =
+    when (searchingViewType) {
+        SearchingViewType.Image -> thumbnailUrl
+        SearchingViewType.Video -> thumbnail
+        null -> thumbnailUrl ?: thumbnail
+    }?.takeIf { it.isNotBlank() }
+
+private fun Document.primaryLabel(fallbackTitle: String): String =
+    when (searchingViewType) {
+        SearchingViewType.Image -> collection
+        SearchingViewType.Video -> title
+        null -> title ?: collection
+    }?.takeIf { it.isNotBlank() } ?: fallbackTitle
+
+private fun Document.secondaryLabel(fallbackSubtitle: String): String =
+    when (searchingViewType) {
+        SearchingViewType.Image -> displaySiteName ?: docUrl
+        SearchingViewType.Video -> author ?: url
+        null -> displaySiteName ?: author ?: docUrl ?: url
+    }?.takeIf { it.isNotBlank() } ?: fallbackSubtitle
+
 @Preview
 @Composable
-fun SavedDocumentITemPreview() {
-    SavedDocumentItem(fakeDocument())
+fun SavedDocumentImageItemPreview() {
+    SavedDocumentItem(
+        document =
+            fakeDocument().copy(
+                collection = "Beautiful interior inspiration",
+                displaySiteName = "example.com",
+                datetime = "2025-07-23T14:11:00.000+09:00",
+                searchingViewType = SearchingViewType.Image,
+            ),
+    )
+}
+
+@Preview
+@Composable
+fun SavedDocumentVideoItemPreview() {
+    SavedDocumentItem(
+        document =
+            fakeDocument().copy(
+                title = "Compose MVI Architecture Walkthrough",
+                author = "Open Studio",
+                datetime = "2025-07-23T14:11:00.000+09:00",
+                searchingViewType = SearchingViewType.Video,
+            ),
+    )
 }
