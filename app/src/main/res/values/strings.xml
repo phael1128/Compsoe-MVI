@@ -15,4 +15,6 @@
     <string name="saved_document_thumbnail">저장된 문서 썸네일</string>
     <string name="saved_document_fallback_title">저장한 문서</string>
     <string name="saved_document_fallback_subtitle">다시 열어볼 수 있는 항목</string>
+    <string name="saved_icon_unsaved">저장하기</string>
+    <string name="saved_icon_saved">저장됨</string>
 </resources>

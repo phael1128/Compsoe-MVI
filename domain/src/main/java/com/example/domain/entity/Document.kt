@@ -15,7 +15,7 @@ data class Document(
     val url: String?,
     val datetime: String,
     var searchingViewType: SearchingViewType? = null,
-    var isSaveButtonVisible: Boolean = false
+    var isSaved: Boolean = false,
 )
 
 fun fakeDocument() = Document(

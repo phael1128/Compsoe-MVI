@@ -61,6 +61,18 @@ class SearchingViewModel
             viewModelScope.launch(coroutineExceptionHandler) {
                 val saveDocument = currentState.documents[position]
                 savedDocumentResultUseCase.insertDocumentEntity(saveDocument)
+                setState {
+                    copy(
+                        documents =
+                            documents.mapIndexed { index, document ->
+                                if (index == position) {
+                                    document.copy(isSaved = true)
+                                } else {
+                                    document
+                                }
+                            },
+                    )
+                }
             }
         }
     }

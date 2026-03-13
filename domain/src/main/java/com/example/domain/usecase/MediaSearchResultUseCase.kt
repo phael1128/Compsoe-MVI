@@ -72,7 +72,7 @@ class MediaSearchResultUseCase
             when (val result = mediaSearchingRepository.getImageResult(query, page, PAGE_SIZE)) {
                 is DomainResult.Success -> {
                     result.body.documents.forEach { document ->
-                        document.isSaveButtonVisible = document.docUrl in savedImageDocUrlSet
+                        document.isSaved = document.docUrl in savedImageDocUrlSet
                     }
                     onSuccessCallback.invoke(result.body)
                 }
@@ -90,7 +90,7 @@ class MediaSearchResultUseCase
             when (val result = mediaSearchingRepository.getVideoResult(query, page, PAGE_SIZE)) {
                 is DomainResult.Success -> {
                     result.body.documents.forEach { document ->
-                        document.isSaveButtonVisible = document.url in savedVideoUrlSet
+                        document.isSaved = document.url in savedVideoUrlSet
                     }
                     onSuccessCallback.invoke(result.body)
                 }
