@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.domain.entity.Document
@@ -105,11 +106,12 @@ fun SearchingViewType?.badgePalette(): BadgePalette =
         }
     }
 
+@Composable
 fun SearchingViewType?.badgeLabel(): String =
     when (this) {
-        SearchingViewType.Image -> "IMAGE"
-        SearchingViewType.Video -> "VIDEO"
-        null -> "MEDIA"
+        SearchingViewType.Image -> stringResource(R.string.media_type_image)
+        SearchingViewType.Video -> stringResource(R.string.media_type_video)
+        null -> stringResource(R.string.media_type_generic)
     }
 
 fun Document.thumbnailModel(): String? =
