@@ -5,8 +5,10 @@ import com.example.domain.entity.Image
 import com.example.domain.entity.Video
 import com.example.domain.model.DomainResult
 import com.example.domain.repository.MediaSearchingRepository
+import javax.inject.Inject
 
 class MediaSearchResultUseCase
+    @Inject
     constructor(
         private val mediaSearchingRepository: MediaSearchingRepository,
         private val savedDocumentResultUseCase: SavedDocumentResultUseCase,
