@@ -1,7 +1,9 @@
 package com.example.data.datasource.local.di
 
 import android.content.Context
+import androidx.room.migration.Migration
 import androidx.room.Room
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.data.datasource.local.database.SearchingResultDataBase
 import dagger.Module
 import dagger.Provides
@@ -22,11 +24,27 @@ object SavedSearchingDatabaseModule {
         context,
         SearchingResultDataBase::class.java,
         "searching-result-database"
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 
     @Provides
     @Singleton
     fun provideSearchingDao(
         searchingResultDataBase: SearchingResultDataBase
     ) = searchingResultDataBase.searchingDao()
+
+    private val MIGRATION_1_2 =
+        object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE searching_table ADD COLUMN searchingViewType TEXT")
+                database.execSQL(
+                    """
+                    UPDATE searching_table
+                    SET searchingViewType = CASE
+                        WHEN docUrl IS NOT NULL AND docUrl != '' THEN 'Image'
+                        ELSE 'Video'
+                    END
+                    """.trimIndent(),
+                )
+            }
+        }
 }

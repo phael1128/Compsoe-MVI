@@ -46,17 +46,13 @@ fun DocumentEntity.toDocument() = Document(
     thumbnail = thumbnail,
     title = title,
     url = url,
-    datetime = datetime
+    datetime = datetime,
+    searchingViewType = searchingViewType.toSearchingViewType(),
+    isSaved = true,
 )
 
 fun List<DocumentEntity>.toDocumentList(): List<Document> = map { entity ->
-    entity.toDocument().apply {
-        searchingViewType = entity.title.takeIf {
-            !entity.docUrl.isNullOrEmpty()
-        }?.let {
-            SearchingViewType.Image
-        } ?: SearchingViewType.Video
-    }
+    entity.toDocument()
 }
 
 fun Document.toDocumentEntity() = DocumentEntity(
@@ -72,5 +68,9 @@ fun Document.toDocumentEntity() = DocumentEntity(
     thumbnail = thumbnail,
     title = title,
     url = url,
-    datetime = datetime
+    datetime = datetime,
+    searchingViewType = searchingViewType?.name,
 )
+
+private fun String?.toSearchingViewType(): SearchingViewType? =
+    SearchingViewType.entries.find { it.name == this }

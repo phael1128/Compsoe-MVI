@@ -24,4 +24,5 @@ data class DocumentEntity(
     @ColumnInfo(name = "title") val title: String?,
     @ColumnInfo(name = "url") val url: String?,
     @ColumnInfo(name = "datetime") val datetime: String,
+    @ColumnInfo(name = "searchingViewType") val searchingViewType: String?,
 )
