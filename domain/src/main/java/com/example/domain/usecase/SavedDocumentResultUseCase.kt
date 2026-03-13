@@ -1,8 +1,15 @@
 package com.example.domain.usecase
 
 import com.example.domain.entity.Document
+import com.example.domain.repository.SavedDocumentRepository
 
-interface SavedDocumentResultUseCase {
-    suspend fun getSavedDocumentEntity(): List<Document>
-    suspend fun insertDocumentEntity(document: Document)
-}
+class SavedDocumentResultUseCase
+    constructor(
+        private val savedDocumentRepository: SavedDocumentRepository,
+    ) {
+        suspend fun getSavedDocumentEntity(): List<Document> = savedDocumentRepository.getSavedDocumentEntityList()
+
+        suspend fun insertDocumentEntity(document: Document) {
+            savedDocumentRepository.insertDocumentEntity(document)
+        }
+    }
