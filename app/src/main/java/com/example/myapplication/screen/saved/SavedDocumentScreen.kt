@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +71,7 @@ fun SavedDocumentScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                SavedDocumentHeader(savedCount = uiState.savedDocuments.size)
+                SavedDocumentHeader()
             }
 
             items(uiState.savedDocuments) { item ->
@@ -81,7 +82,7 @@ fun SavedDocumentScreen(
 }
 
 @Composable
-private fun SavedDocumentHeader(savedCount: Int) {
+private fun SavedDocumentHeader() {
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         modifier =
@@ -101,21 +102,13 @@ private fun SavedDocumentHeader(savedCount: Int) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-
-        Text(
-            text = stringResource(R.string.saved_documents_count, savedCount),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(top = 2.dp),
-        )
     }
 }
 
 @Composable
 private fun SavedDocumentEmptyState(modifier: Modifier = Modifier) {
     Card(
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = RoundedCornerShape(30.dp),
         colors =
             CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,

@@ -39,8 +39,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.domain.entity.Document
-import com.example.domain.entity.SearchingViewType
 import com.example.myapplication.R
+import com.example.myapplication.ui.MediaTypeBadge
+import com.example.myapplication.ui.OverlayGlassBadge
+import com.example.myapplication.ui.badgeLabel
+import com.example.myapplication.ui.badgePalette
+import com.example.myapplication.ui.primaryLabel
+import com.example.myapplication.ui.secondaryLabel
+import com.example.myapplication.ui.thumbnailModel
 import com.example.myapplication.util.getISOTimeToString
 
 @Composable
@@ -215,45 +221,9 @@ private fun SearchThumbnail(
                     ),
             contentAlignment = Alignment.BottomStart,
         ) {
-            Text(
+            OverlayGlassBadge(
                 text = stringResource(R.string.searching_thumbnail_badge),
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.White.copy(alpha = 0.92f),
                 modifier = Modifier.padding(12.dp),
-            )
-        }
-    }
-}
-
-@Composable
-private fun MediaTypeBadge(viewType: SearchingViewType?) {
-    val palette = viewType.badgePalette()
-
-    Surface(
-        shape = RoundedCornerShape(999.dp),
-        color = palette.containerColor,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-        ) {
-            Icon(
-                painter =
-                    when (viewType) {
-                        SearchingViewType.Video -> painterResource(R.drawable.vic_searching_result_video)
-                        SearchingViewType.Image -> painterResource(R.drawable.vic_searching_result_image)
-                        null -> painterResource(R.drawable.vic_searching_result_image)
-                    },
-                contentDescription = null,
-                tint = palette.contentColor,
-                modifier = Modifier.size(16.dp),
-            )
-            Text(
-                text = viewType.badgeLabel(),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = palette.contentColor,
             )
         }
     }
@@ -309,55 +279,3 @@ private fun SaveActionButton(
         }
     }
 }
-
-private data class BadgePalette(
-    val containerColor: Color,
-    val contentColor: Color,
-)
-
-private fun SearchingViewType?.badgePalette(): BadgePalette =
-    when (this) {
-        SearchingViewType.Video ->
-            BadgePalette(
-                containerColor = Color(0xFFFFE2D2),
-                contentColor = Color(0xFF9E4524),
-            )
-        SearchingViewType.Image ->
-            BadgePalette(
-                containerColor = Color(0xFFDDF3F2),
-                contentColor = Color(0xFF145C63),
-            )
-        null ->
-            BadgePalette(
-                containerColor = Color(0xFFE9EEF2),
-                contentColor = Color(0xFF41515E),
-            )
-    }
-
-private fun SearchingViewType?.badgeLabel(): String =
-    when (this) {
-        SearchingViewType.Image -> "IMAGE"
-        SearchingViewType.Video -> "VIDEO"
-        null -> "MEDIA"
-    }
-
-private fun Document.thumbnailModel(): String? =
-    when (searchingViewType) {
-        SearchingViewType.Image -> thumbnailUrl
-        SearchingViewType.Video -> thumbnail
-        null -> thumbnailUrl ?: thumbnail
-    }?.takeIf { it.isNotBlank() }
-
-private fun Document.primaryLabel(fallbackTitle: String): String =
-    when (searchingViewType) {
-        SearchingViewType.Image -> collection
-        SearchingViewType.Video -> title
-        null -> title ?: collection
-    }?.takeIf { it.isNotBlank() } ?: fallbackTitle
-
-private fun Document.secondaryLabel(fallbackSubtitle: String): String =
-    when (searchingViewType) {
-        SearchingViewType.Image -> displaySiteName ?: docUrl
-        SearchingViewType.Video -> author ?: url
-        null -> displaySiteName ?: author ?: docUrl ?: url
-    }?.takeIf { it.isNotBlank() } ?: fallbackSubtitle

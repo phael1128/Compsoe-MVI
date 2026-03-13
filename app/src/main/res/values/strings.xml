@@ -8,7 +8,6 @@
     <string name="create_time_string">yyyy년 MM월 dd일 hh:mm</string>
     <string name="saved_documents_title">Saved Archive</string>
     <string name="saved_documents_subtitle">다시 보고 싶은 결과들을 차분하게 모아둔 공간입니다.</string>
-    <string name="saved_documents_count">%1$d개의 항목</string>
     <string name="saved_documents_empty_title">아직 저장한 항목이 없어요</string>
     <string name="saved_documents_empty_message">검색 결과에서 저장 버튼을 누르면 이곳에 차곡차곡 쌓입니다.</string>
     <string name="saved_status_badge">저장됨</string>
@@ -19,7 +18,6 @@
     <string name="saved_icon_saved">저장됨</string>
     <string name="searching_results_title">Search Stream</string>
     <string name="searching_results_subtitle">이미지와 동영상 결과를 한 흐름으로 살펴보세요.</string>
-    <string name="searching_results_count">%1$d개의 결과가 정리되어 있어요.</string>
     <string name="searching_empty_idle_title">검색할 준비가 되어 있어요</string>
     <string name="searching_empty_idle_message">키워드를 입력하면 분위기 좋은 카드 리스트로 결과를 모아 보여드립니다.</string>
     <string name="searching_empty_result_title">아직 맞는 결과를 찾지 못했어요</string>

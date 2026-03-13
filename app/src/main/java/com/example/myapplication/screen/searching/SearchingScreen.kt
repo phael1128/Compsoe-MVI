@@ -70,6 +70,7 @@ fun SearchingScreen(
                 is SearchingContract.Effect.NavigateToDetail -> {
                     onNavigateToDetail(effect.uri)
                 }
+
                 is SearchingContract.Effect.ShowError -> {
                     // TODO: Show error toast/snackbar
                 }
@@ -104,7 +105,6 @@ fun SearchingScreen(
                 item {
                     SearchingResultHeader(
                         searchQuery = uiState.searchQuery,
-                        documentCount = uiState.documents.size,
                     )
                 }
 
@@ -145,22 +145,14 @@ fun SearchingScreen(
 }
 
 @Composable
-private fun SearchingResultHeader(
-    searchQuery: String,
-    documentCount: Int,
-) {
+private fun SearchingResultHeader(searchQuery: String) {
     val title =
         if (searchQuery.isBlank()) {
             stringResource(R.string.searching_results_title)
         } else {
             "\"$searchQuery\""
         }
-    val subtitle =
-        if (searchQuery.isBlank()) {
-            stringResource(R.string.searching_results_subtitle)
-        } else {
-            stringResource(R.string.searching_results_count, documentCount)
-        }
+    val subtitle = stringResource(R.string.searching_results_subtitle)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
