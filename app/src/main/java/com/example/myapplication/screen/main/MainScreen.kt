@@ -59,7 +59,11 @@ fun MainScreen() {
 
                 SavedDocumentScreen(
                     uiState = uiState,
+                    effectFlow = viewModel.effect,
                     setEvent = viewModel::setEvent,
+                    onNavigateToDetail = { uri ->
+                        navController.navigate("${SearchingRoute.SEARCHING_DETAIL_SCREEN.routeName}/$uri")
+                    },
                 )
             }
             composable(

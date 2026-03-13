@@ -13,4 +13,16 @@ interface SearchingDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertSearchingEntity(documentEntity: DocumentEntity)
+
+    @Query(
+        """
+        DELETE FROM searching_table
+        WHERE (:docUrl IS NOT NULL AND docUrl = :docUrl)
+           OR (:url IS NOT NULL AND url = :url)
+        """,
+    )
+    suspend fun deleteSearchingEntity(
+        docUrl: String?,
+        url: String?,
+    )
 }

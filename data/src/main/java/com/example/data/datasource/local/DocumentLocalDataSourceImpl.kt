@@ -14,4 +14,14 @@ class DocumentLocalDataSourceImpl @Inject constructor(
     override suspend fun insertDocumentEntity(documentEntity: DocumentEntity) {
         searchingDao.insertSearchingEntity(documentEntity)
     }
+
+    override suspend fun deleteDocumentEntity(
+        docUrl: String?,
+        url: String?,
+    ) {
+        searchingDao.deleteSearchingEntity(
+            docUrl = docUrl,
+            url = url,
+        )
+    }
 }

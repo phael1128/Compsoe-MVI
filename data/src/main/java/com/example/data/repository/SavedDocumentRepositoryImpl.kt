@@ -17,4 +17,11 @@ class SavedDocumentRepositoryImpl @Inject constructor(
     override suspend fun insertDocumentEntity(document: Document) {
         documentLocalDataSource.insertDocumentEntity(document.toDocumentEntity())
     }
+
+    override suspend fun deleteDocumentEntity(document: Document) {
+        documentLocalDataSource.deleteDocumentEntity(
+            docUrl = document.docUrl,
+            url = document.url,
+        )
+    }
 }

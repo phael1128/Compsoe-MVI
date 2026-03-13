@@ -9,19 +9,29 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,7 +43,6 @@ import com.example.domain.entity.SearchingViewType
 import com.example.domain.entity.fakeDocument
 import com.example.myapplication.R
 import com.example.myapplication.ui.MediaTypeBadge
-import com.example.myapplication.ui.OverlayGlassBadge
 import com.example.myapplication.ui.badgeLabel
 import com.example.myapplication.ui.badgePalette
 import com.example.myapplication.ui.primaryLabel
@@ -46,11 +55,15 @@ fun SavedDocumentItem(
     document: Document,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    onRemoveClick: () -> Unit = {},
+    onShareClick: () -> Unit = {},
+    onCopyLinkClick: () -> Unit = {},
 ) {
     val shape = RoundedCornerShape(28.dp)
     val viewType = document.searchingViewType
     val fallbackTitle = stringResource(R.string.saved_document_fallback_title)
     val fallbackSubtitle = stringResource(R.string.saved_document_fallback_subtitle)
+    var isMenuExpanded by remember { mutableStateOf(false) }
 
     Card(
         onClick = onClick,
@@ -85,7 +98,54 @@ fun SavedDocumentItem(
                             .padding(14.dp),
                 ) {
                     MediaTypeBadge(viewType = viewType)
-                    OverlayGlassBadge(text = stringResource(R.string.saved_status_badge))
+
+                    Box {
+                        Surface(
+                            shape = CircleShape,
+                            color = Color.White.copy(alpha = 0.2f),
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    isMenuExpanded = true
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.vic_more_vertical),
+                                    contentDescription = stringResource(R.string.saved_document_more_actions),
+                                    tint = Color.White,
+                                )
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = isMenuExpanded,
+                            onDismissRequest = {
+                                isMenuExpanded = false
+                            },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.saved_document_remove_action)) },
+                                onClick = {
+                                    isMenuExpanded = false
+                                    onRemoveClick.invoke()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.saved_document_share_action)) },
+                                onClick = {
+                                    isMenuExpanded = false
+                                    onShareClick.invoke()
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.saved_document_copy_link_action)) },
+                                onClick = {
+                                    isMenuExpanded = false
+                                    onCopyLinkClick.invoke()
+                                },
+                            )
+                        }
+                    }
                 }
             }
 
@@ -119,13 +179,20 @@ fun SavedDocumentItem(
                     )
                 }
 
-                Text(
-                    text = getISOTimeToString(document.datetime, stringResource(R.string.create_time_string)),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Surface(
+                    shape = RoundedCornerShape(999.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.52f),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = getISOTimeToString(document.datetime, stringResource(R.string.create_time_string)),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Clip,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+                    )
+                }
             }
         }
     }

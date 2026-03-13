@@ -12,4 +12,8 @@ class SavedDocumentResultUseCase
         suspend fun insertDocumentEntity(document: Document) {
             savedDocumentRepository.insertDocumentEntity(document)
         }
+
+        suspend fun deleteDocumentEntity(document: Document) {
+            savedDocumentRepository.deleteDocumentEntity(document)
+        }
     }
